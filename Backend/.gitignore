@@ -14,6 +14,7 @@ logs
 volumes
 Culinary-Assistant-Main/credentials
 Culinary-Assistant-Main/config
+Culinary-Assistant-Main/root.crt
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
