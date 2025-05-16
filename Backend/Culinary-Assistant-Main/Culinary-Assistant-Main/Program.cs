@@ -29,7 +29,7 @@ builder.Services.AddCors(setup =>
 	setup.AddPolicy(ConfigurationConstants.FrontendPolicy, config =>
 	{
 		config
-	   .WithOrigins(builder.Configuration[ConfigurationConstants.FrontendHost]!)
+	   .WithOrigins(builder.Configuration[ConfigurationConstants.FrontendHost]!, builder.Configuration[ConfigurationConstants.FrontendHostYandex]!)
 	   .AllowAnyHeader()
 	   .AllowAnyMethod()
 	   .AllowCredentials();
@@ -62,6 +62,7 @@ var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
+	app.UseStaticFiles();
 	app.UseSwagger();
 	app.UseSwaggerUI();
 }
@@ -69,7 +70,6 @@ if (app.Environment.IsDevelopment())
 app.UseCors(ConfigurationConstants.FrontendPolicy);
 
 app.UseMiddleware<ExceptionMiddleware>();
-
 app.UseAuthorization();
 
 app.MapControllers();

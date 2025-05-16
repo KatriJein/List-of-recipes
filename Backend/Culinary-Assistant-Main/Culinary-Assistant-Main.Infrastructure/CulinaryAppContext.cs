@@ -29,7 +29,8 @@ namespace Culinary_Assistant_Main.Infrastructure
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 		{
 			if (!isTesting)
-				optionsBuilder.UseNpgsql(_connectionOptions.ConnectionString, options => options.MigrationsAssembly(Assembly.GetExecutingAssembly()));
+				optionsBuilder.UseNpgsql(_connectionOptions.ConnectionString, options => 
+				{ options.MigrationsAssembly(Assembly.GetExecutingAssembly()); options.EnableRetryOnFailure(10); });
 			base.OnConfiguring(optionsBuilder);
 		}
 	}
