@@ -27,7 +27,7 @@ services:
     networks:
         - culinary-network-new
     restart: always
-    container_name: CulinaryAssistantDatabase
+    container_name: CulinaryAssistantDatabase2
     ports:
         - "5432:5432"
     image: postgres:latest

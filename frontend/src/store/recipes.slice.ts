@@ -26,7 +26,7 @@ export const fetchRecipes = createAsyncThunk(
     async (_, { rejectWithValue }) => {
         try {
             const data = await getRecipesApi();
-            return data.recipes;
+            return data;
         } catch (err) {
             return rejectWithValue((err as Error).message);
         }
@@ -54,7 +54,7 @@ export const addRecipe = createAsyncThunk(
         try {
             await createRecipe(dto, imageFile);
             const data = await getRecipesApi();
-            return data.recipes;
+            return data;
         } catch (err) {
             return rejectWithValue((err as Error).message);
         }
@@ -74,7 +74,7 @@ export const updateRecipe = createAsyncThunk(
         try {
             await updateRecipeApi(id, dto, imageFile);
             const data = await getRecipesApi();
-            return data.recipes;
+            return data;
         } catch (err) {
             return rejectWithValue((err as Error).message);
         }
@@ -99,7 +99,7 @@ export const RecipesSlice = createSlice({
             })
             .addCase(fetchRecipes.fulfilled, (state, action) => {
                 state.isLoading = false;
-                state.recipes = action.payload;
+                state.recipes = action.payload || [];
             })
             .addCase(fetchRecipes.rejected, (state, action) => {
                 state.isLoading = false;
