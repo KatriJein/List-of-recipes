@@ -1,0 +1,44 @@
+version: '3.4'
+
+networks:
+  culinary-network-new:
+    driver: bridge
+
+services:
+  culinary-assistant-main:
+    networks:
+        - culinary-network-new
+    image: culinaryassistantmainnew:latest
+    restart: always
+    container_name: CulinaryAssistantMain
+    ports:
+        - "5000:5000"
+    build:
+      context: .
+      dockerfile: Culinary-Assistant-Main/Dockerfile
+    volumes:
+        - "./credentials:/home/app/.aws/credentials"
+        - "./config:/home/app/.aws/config"
+    depends_on:
+        culinarydbnew:
+           condition: service_healthy
+
+  culinarydbnew:
+    networks:
+        - culinary-network-new
+    restart: always
+    container_name: CulinaryAssistantDatabase
+    ports:
+        - "5432:5432"
+    image: postgres:latest
+    volumes:
+        - "./volumes/pgdata:/var/lib/postgresql/data"
+    environment:
+        - POSTGRES_DB=CulinarDBnew
+        - POSTGRES_USER=Culinar334
+        - POSTGRES_PASSWORD=culinarypasswd
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-q", "-d", "CulinarDBnew", "-U", "Culinar334" ]
+      interval: 5s
+      timeout: 5s
+      retries: 30
