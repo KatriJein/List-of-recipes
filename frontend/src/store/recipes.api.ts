@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { Recipe } from '../types';
 
-const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000/';
+const apiUrl = `${(window as any)._env_?.API_URL}/`;
 
 export interface TRecipesResponse {
     data: Recipe[];

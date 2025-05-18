@@ -31,6 +31,7 @@ function App() {
     const openEditModal = (id: string | null) => {
         setEditingRecipeId(id);
         const recipe = recipes.find((r) => r.id === id);
+        console.log('recipe', recipe);
         setImagePreview(recipe?.presignedPictureUrl || null);
         setIsModalOpen(true);
     };
