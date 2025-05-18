@@ -1,14 +1,16 @@
 import axios from 'axios';
 import { Recipe } from '../types';
 
-const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000/';
+const apiUrl = `${(window as any)._env_?.API_URL}/`;
 
 export interface TRecipesResponse {
-    recipes: Recipe[];
+    data: Recipe[];
+    entitiesCount: number;
+    pagesCount: number;
 }
 
 // Получение списка рецептов
-export const getRecipesApi = async (): Promise<TRecipesResponse> => {
+export const getRecipesApi = async (): Promise<Recipe[]> => {
     try {
         const response = await axios.get<TRecipesResponse>(
             `${apiUrl}api/receipts`,
@@ -20,7 +22,7 @@ export const getRecipesApi = async (): Promise<TRecipesResponse> => {
             }
         );
 
-        return response.data;
+        return response.data.data;
     } catch (error) {
         if (axios.isAxiosError(error)) {
             if (typeof error.response?.data === 'string') {
@@ -40,7 +42,7 @@ export const getRecipesApi = async (): Promise<TRecipesResponse> => {
 // Удаление рецепта
 export const deleteRecipeApi = async (id: string): Promise<string> => {
     try {
-        const response = await axios.delete(`${apiUrl}api/receipt/${id}`, {
+        const response = await axios.delete(`${apiUrl}api/receipts/${id}`, {
             headers: {
                 Accept: '*/*',
             },
@@ -65,10 +67,12 @@ export const deleteRecipeApi = async (id: string): Promise<string> => {
 };
 
 // Загрузка фотографии рецепта
-export const uploadRecipeImage = async (file?: File): Promise<string> => {
+export const uploadRecipeImage = async (
+    file?: File
+): Promise<{ url: string }> => {
     try {
         if (!file) {
-            return '';
+            return { url: '' };
         }
 
         const formData = new FormData();
@@ -85,7 +89,7 @@ export const uploadRecipeImage = async (file?: File): Promise<string> => {
             }
         );
 
-        return response.data[0].url;
+        return response.data[0];
     } catch (error) {
         if (axios.isAxiosError(error)) {
             if (typeof error.response?.data === 'string') {
@@ -106,7 +110,7 @@ export const uploadRecipeImage = async (file?: File): Promise<string> => {
 export interface CreateRecipeDto {
     title: string;
     description: string;
-    mainPictureUrl?: string;
+    mainPictureUrl?: { url: string };
 }
 
 // Добавление нового рецепта
@@ -154,7 +158,7 @@ export const createRecipe = async (
 export type UpdateRecipeDto = {
     title?: string;
     description?: string;
-    mainPictureUrl?: string;
+    mainPictureUrl?: { url: string };
 };
 
 export const updateRecipeApi = async (
@@ -176,7 +180,7 @@ export const updateRecipeApi = async (
             };
         }
 
-        await axios.put(`${apiUrl}api/receipt/${id}`, recipeWithImage, {
+        await axios.put(`${apiUrl}api/receipts/${id}`, recipeWithImage, {
             headers: {
                 Accept: '*/*',
                 'Content-Type': 'application/json',
