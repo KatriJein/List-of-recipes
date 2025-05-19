@@ -17,6 +17,6 @@ COPY ./env.sh .
 
 RUN chmod +x ./env.sh
 
-EXPOSE 8080
+EXPOSE 80
 
 CMD ["./env.sh"]
